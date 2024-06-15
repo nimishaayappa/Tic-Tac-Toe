@@ -4,51 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic-Tac-Toe</title>
-    <script src="tictactoe.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="tictactoe.js" defer></script>
 </head>
 <body>
 
-<div>
-    <h1>Tic-Tac-Toe</h1>
+<header>
+    Tic-Tac-Toe
+</header>
 
-    <!-- Game board -->
-    <div class="game-board">
-        <a onclick="clicked(this)" id="0"></a>
-        <a onclick="clicked(this)" id="1"></a>
-        <a onclick="clicked(this)" id="2"></a>
-        <a onclick="clicked(this)" id="3"></a>
-        <a onclick="clicked(this)" id="4"></a>
-        <a onclick="clicked(this)" id="5"></a>
-        <a onclick="clicked(this)" id="6"></a>
-        <a onclick="clicked(this)" id="7"></a>
-        <a onclick="clicked(this)" id="8"></a>
-    </div>
-
-
+<div class="scoreboard">
+    Player X: <span id="playerX-wins">0</span> | Player O: <span id="playerO-wins">0</span>
 </div>
 
+<div class="game-board">
+    <div onclick="clicked(this)" id="0" role="button" aria-label="Cell 1"></div>
+    <div onclick="clicked(this)" id="1" role="button" aria-label="Cell 2"></div>
+    <div onclick="clicked(this)" id="2" role="button" aria-label="Cell 3"></div>
+    <div onclick="clicked(this)" id="3" role="button" aria-label="Cell 4"></div>
+    <div onclick="clicked(this)" id="4" role="button" aria-label="Cell 5"></div>
+    <div onclick="clicked(this)" id="5" role="button" aria-label="Cell 6"></div>
+    <div onclick="clicked(this)" id="6" role="button" aria-label="Cell 7"></div>
+    <div onclick="clicked(this)" id="7" role="button" aria-label="Cell 8"></div>
+    <div onclick="clicked(this)" id="8" role="button" aria-label="Cell 9"></div>
+</div>
+
+<div class="controls">
+    <button onclick="restartGame()">Restart Game</button>
+    <button onclick="endGame()">End Game</button>
+</div>
+
+<footer>
+    Assignment 2: Tic-Tac-Toe Game
+</footer>
 
 </body>
-
-<style>
-
-.game-board {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
-    grid-gap: 5px;
-    width: 350px;
-    height: 350px;
-}
-
-.game-board a {
-    width: 100px;
-    height: 100px;
-    border: 1px solid black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-</style>
 </html>
