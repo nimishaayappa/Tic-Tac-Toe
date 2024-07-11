@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="tictactoe.js" defer></script>
+</head>
+<body>
+
+<header>
+    Tic-Tac-Toe
+</header>
+
+<div class="scoreboard">
+    Player X: <span id="playerX-wins">0</span> | Player O: <span id="playerO-wins">0</span>
+</div>
+
+<div class="game-board">
+    <div onclick="clicked(this)" id="0" role="button" aria-label="Cell 1"></div>
+    <div onclick="clicked(this)" id="1" role="button" aria-label="Cell 2"></div>
+    <div onclick="clicked(this)" id="2" role="button" aria-label="Cell 3"></div>
+    <div onclick="clicked(this)" id="3" role="button" aria-label="Cell 4"></div>
+    <div onclick="clicked(this)" id="4" role="button" aria-label="Cell 5"></div>
+    <div onclick="clicked(this)" id="5" role="button" aria-label="Cell 6"></div>
+    <div onclick="clicked(this)" id="6" role="button" aria-label="Cell 7"></div>
+    <div onclick="clicked(this)" id="7" role="button" aria-label="Cell 8"></div>
+    <div onclick="clicked(this)" id="8" role="button" aria-label="Cell 9"></div>
+</div>
+
+<div class="controls">
+    <button onclick="restartGame()">Restart Game</button>
+    <button onclick="endGame()">End Game</button>
+</div>
+
+<footer>
+    Assignment 2: Tic-Tac-Toe Game
+</footer>
+
+</body>
+</html>
