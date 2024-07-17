@@ -8,12 +8,16 @@ if (!isset($_SESSION['game'])) {
         'currentPlayer' => 'X',
         'playerXWins' => 0,
         'playerOWins' => 0,
-        'gameEnded' => false // New flag to track if the game has ended
+        'gameEnded' => false, // New flag to track if the game has ended
+        'hasWon' => false // If user has won
     ];
 }
 
 if (!isset($_SESSION['leaderboard'])) {
-    $_SESSION['leaderboard'] = [];
+    $_SESSION['leaderboard'] = [
+        'userScores' => [],
+        'currentUserAndHighScore' => [],
+    ];
 }
 
 // Handle API requests
@@ -33,8 +37,10 @@ switch ($action) {
             if (checkWin($_SESSION['game']['board'], $_SESSION['game']['currentPlayer'])) {
                 if ($_SESSION['game']['currentPlayer'] == 'X') {
                     $_SESSION['game']['playerXWins']++;
+                    $_SESSION['game']['hasWon'] = true;
                 } else {
                     $_SESSION['game']['playerOWins']++;
+                    $_SESSION['game']['hasWon'] = false;
                 }
                 $_SESSION['leaderboard'][] = [
                     'player' => $_SESSION['game']['currentPlayer'],
@@ -75,6 +81,41 @@ switch ($action) {
             'playerXWins' => $_SESSION['game']['playerXWins'],
             'playerOWins' => $_SESSION['game']['playerOWins']
         ]);
+        break;
+
+    case 'setUsername':
+        $username = $_POST['username'] ?? 'Guest';
+        
+        if (!isset($_SESSION['leaderboard']['userScores'])) {
+            $_SESSION['leaderboard']['userScores'] = [];
+        }
+
+        if (array_key_exists($username, $_SESSION['leaderboard']['userScores'])) {
+           
+            $_SESSION['leaderboard']['currentUserAndHighScore'][$username] = 
+            $_SESSION['leaderboard']['userScores'][$username];
+           
+        } else {
+            
+            //$_SESSION['game']['userScores'][$username] = 0; 
+            $_SESSION['leaderboard']['userScores'][$username] = 0;
+            $_SESSION['leaderboard']['currentUserAndHighScore'][$username] = 0;
+            
+        }
+
+        echo json_encode([
+            'currentUserAndHighScore' => $_SESSION['leaderboard']['currentUserAndHighScore'] 
+        ]);
+        break;
+
+    case 'replaceHighScore':
+        $username = $_POST['username'] ?? 'Guest';
+        $newScore = $_POST['consecWins'];
+
+        $_SESSION['leaderboard']['userScores'][$username] = $newScore;
+        
+        echo json_encode(['success' => true]);
+    
         break;
 
     default:

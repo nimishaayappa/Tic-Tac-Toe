@@ -18,6 +18,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+let consecutiveWinsX = 0;
+let highestScore = 0;
+let username = '';
+let lost = false;
+
 function fetchGameState() {
     fetch('api.php?action=getGameState')
         .then(response => response.json())
@@ -40,6 +45,17 @@ function makeMove(index, player) {
     .then(data => {
         updateBoard(data);
         if (data.gameEnded) {
+            console.log("Game has ended");
+            if (data.hasWon) {
+                consecutiveWinsX++;
+                console.log("player has won consecutively");
+            } else {
+                //consecutiveWinsX = 0;
+                console.log ("player has lost");
+                lost = true;
+            }
+
+            console.log("Consecutive Score: ", consecutiveWinsX);
             showEndGameDialog();
         } else if (player === 'X' && !data.gameEnded) {
             computerMove();
@@ -72,6 +88,21 @@ function restartGame() {
 }
 
 function endGame() {
+    replaceHighScore();
+    
+    if (lost) {
+        username = 'Guest';
+            //consecutiveWinsX = 0;
+
+        // reset username field
+        document.getElementById('username').value = username;
+        document.getElementById('display-username').innerText = username || 'Guest';
+        consecutiveWinsX = 0;
+        lost = false;
+    }
+
+    
+
     fetch('api.php?action=endGame')
         .then(response => response.json())
         .then(data => {
@@ -80,6 +111,28 @@ function endGame() {
         })
         .catch(error => console.error('Error ending game:', error));
 }
+
+function replaceHighScore() {
+
+    if (consecutiveWinsX > highestScore) {
+        fetch('api.php?action=replaceHighScore', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `username=${username}&consecWins=${consecutiveWinsX}`
+        })
+        .then(response => response.json())  // Handle JSON response
+        .then(data => {
+            if (data.success) {
+                console.log('High score replaced successfully');
+            } else {
+                console.error('Failed to replace high score');
+            }
+        })
+        .catch(error => console.error('Error replacce high score:', error));
+        
+    }
+
+}       
 
 function showEndGameDialog() {
     const playAgain = window.confirm('Game Over! Do you want to play again?');
@@ -108,7 +161,11 @@ function updateBoard(data) {
 }
 
 function setUsername() {
-    const username = document.getElementById('username').value;
+
+    lost = true;
+    endGame();
+    
+    username = document.getElementById('username').value;
     document.getElementById('display-username').innerText = username || 'Guest';
     fetch('api.php?action=setUsername', {
         method: 'POST',
@@ -117,11 +174,16 @@ function setUsername() {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Username set to:', data.username);
-        restartGame();
-        data.playerXWins = 0;
-        data.playerOWins = 0;
-        updateBoard();
+        console.log("Set username: ", username);
+        console.log('High score:', data.currentUserAndHighScore[username]);
+        
+        highestScore = data.currentUserAndHighScore[username];
+        //console.log('Highscore:', data.currentUserAndHighScore.username.);
+
+        //restartGame();
+        //updateBoard();
+        // resets score with this flag
+
     })
     .catch(error => console.error('Error setting username:', error));
 }
