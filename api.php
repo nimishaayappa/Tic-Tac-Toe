@@ -83,6 +83,10 @@ switch ($action) {
         ]);
         break;
 
+    case 'getUserScores':
+        echo json_encode($_SESSION['leaderboard']['userScores']);
+        break;
+
     case 'setUsername':
         $username = $_POST['username'] ?? 'Guest';
         

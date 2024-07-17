@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     fetchGameState();
+    fetchUserScores();
+    setInterval(fetchUserScores, 10000);
 
     document.querySelectorAll('.game-board div').forEach(cell => {
         cell.addEventListener('click', () => {
@@ -20,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let consecutiveWinsX = 0;
 let highestScore = 0;
-let username = '';
+let currentUser = '';
 let lost = false;
 
 function fetchGameState() {
@@ -50,7 +52,7 @@ function makeMove(index, player) {
                 consecutiveWinsX++;
                 console.log("player has won consecutively");
             } else {
-                //consecutiveWinsX = 0;
+                consecutiveWinsX = 0;
                 console.log ("player has lost");
                 lost = true;
             }
@@ -91,12 +93,11 @@ function endGame() {
     replaceHighScore();
     
     if (lost) {
-        username = 'Guest';
             //consecutiveWinsX = 0;
 
         // reset username field
-        document.getElementById('username').value = username;
-        document.getElementById('display-username').innerText = username || 'Guest';
+        document.getElementById('username').value = 'Guest';
+        document.getElementById('display-username').innerText = 'Guest';
         consecutiveWinsX = 0;
         lost = false;
     }
@@ -118,7 +119,7 @@ function replaceHighScore() {
         fetch('api.php?action=replaceHighScore', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `username=${username}&consecWins=${consecutiveWinsX}`
+            body: `username=${currentUser}&consecWins=${consecutiveWinsX}`
         })
         .then(response => response.json())  // Handle JSON response
         .then(data => {
@@ -152,6 +153,30 @@ function hideEndGameDialog() {
     // Implement hiding the dialog if necessary
 }
 
+function fetchUserScores() {
+    fetch('api.php?action=getUserScores')
+        .then(response => response.json())
+        .then(data => {
+            updateLeaderboard(data);
+        })
+        .catch(error => console.error('Error fetching user scores:', error));
+}
+
+function updateLeaderboard(userScores) {
+    const leaderboardList = document.getElementById('leaderboard-list');
+    leaderboardList.innerHTML = ''; // Clear existing list
+
+    // Sort user scores by value (descending order)
+    const sortedScores = Object.entries(userScores).sort(([, scoreA], [, scoreB]) => scoreB - scoreA);
+
+    // Populate the leaderboard
+    sortedScores.forEach(([username, score]) => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${username}: ${score}`;
+        leaderboardList.appendChild(listItem);
+    });
+}
+
 function updateBoard(data) {
     data.board.forEach((value, index) => {
         document.getElementById(index.toString()).innerText = value;
@@ -162,11 +187,14 @@ function updateBoard(data) {
 
 function setUsername() {
 
+    let username = document.getElementById('username').value;    
+
     lost = true;
     endGame();
-    
-    username = document.getElementById('username').value;
+
     document.getElementById('display-username').innerText = username || 'Guest';
+
+
     fetch('api.php?action=setUsername', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -178,6 +206,7 @@ function setUsername() {
         console.log('High score:', data.currentUserAndHighScore[username]);
         
         highestScore = data.currentUserAndHighScore[username];
+        currentUser = username;
         //console.log('Highscore:', data.currentUserAndHighScore.username.);
 
         //restartGame();

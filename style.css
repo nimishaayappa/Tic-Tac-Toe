@@ -108,3 +108,22 @@ button {
 button:hover {
     background-color: var(--primary-color);
 }
+
+.leaderboard {
+    border: 1px solid #ccc;
+    padding: 16px;
+    max-width: 300px;
+}
+
+.leaderboard h2 {
+    margin: 0 0 10px 0;
+}
+
+.leaderboard ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.leaderboard li {
+    padding: 4px 0;
+}
