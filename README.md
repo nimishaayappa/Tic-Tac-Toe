@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is an implemenation of Tic-Tac-Toe using Javascript for the logic, and HTML and CSS for the styling of the website.
+This project is an implemenation of Tic-Tac-Toe using Javascript for the logic, and HTML and CSS for the styling of the website. We incorporated PHP to save info of users and their score and view this leaderboard with HTML. 
 
 ## Design
 
@@ -36,3 +36,6 @@ To play the game, visit this url in a browser of the user's choice. The path mus
 
 #### O Victory
 ![alt o_victory](./assets/victory_o.png "O Victory")
+
+#### Leaderboard
+![image](https://github.com/user-attachments/assets/6f63cb2b-181c-43bd-b567-08e3a7714e93)
