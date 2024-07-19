@@ -167,14 +167,17 @@ function updateLeaderboard(userScores) {
     leaderboardList.innerHTML = ''; // Clear existing list
 
     // Sort user scores by value (descending order)
-    const sortedScores = Object.entries(userScores).sort(([, scoreA], [, scoreB]) => scoreB - scoreA);
+    if (userScores !== null) {
 
-    // Populate the leaderboard
-    sortedScores.forEach(([username, score]) => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${username}: ${score}`;
-        leaderboardList.appendChild(listItem);
-    });
+        const sortedScores = Object.entries(userScores).sort(([, scoreA], [, scoreB]) => scoreB - scoreA);
+
+        // Populate the leaderboard
+        sortedScores.forEach(([username, score]) => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${username}: ${score}`;
+            leaderboardList.appendChild(listItem);
+        });
+    }
 }
 
 function updateBoard(data) {
